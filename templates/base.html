@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    
+    <link rel="stylesheet" href="../static/style.css">
+    <link rel="stylesheet" href="../static/style_input.css">
+
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    {% block head %}
+    {% endblock %}
+  </head>
+
+  <body>
+    <!-- open navbar and settings -->
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+      <header class="mdl-layout__header mdl-layout__header--waterfall">
+        <div class="mdl-layout__header-row">
+        <!-- Title -->
+        <span class="mdl-layout-title"> {% block title %} {% endblock %} </span>
+        <!-- Spacer to align navigation to right -->
+        <div class="mdl-layout-spacer"></div>
+        <!-- Navigation -->
+        <!--<nav class="mdl-navigation">
+          <a class="mdl-navigation__link" href=""> Scout </a>
+          <a class="mdl-navigation__link" href=""> Create </a>
+          <a class="mdl-navigation__link" href=""> Manage </a>
+          <a class="mdl-navigation__link" href=""> Settings </a>
+        </nav>-->
+      </header>
+      <div class="mdl-layout__drawer">
+        <span class="mdl-layout-title"> Navigation </span>
+        <nav class="mdl-navigation">
+          <a class="mdl-navigation__link" href=""> Scout </a>
+          <a class="mdl-navigation__link" href=""> Create </a>
+          <a class="mdl-navigation__link" href=""> Manage </a>
+          <a class="mdl-navigation__link" href=""> Settings </a>
+        </nav>
+      </div>
+      
+      <main class="mdl-layout__content">
+        <div class="page-content"> 
+          {% block body %}
+          {% endblock %}
+        </div>
+      </main>
+    </div>
+  
+    <p class="footer">
+      Project is still in progress. <br>
+      Made by Adris Jautakas
+    </p>
+    
+  </body>
+</html>

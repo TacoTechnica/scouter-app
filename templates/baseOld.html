@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    {% block head %}
+    {% endblock %}
+  </head>
+
+  <body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header has-drawer">
+      <!-- navbar header -->
+      <header class="mdl-layout__header mdl-color--grey-100 mdl-color-text--grey-600 is-casting-shadow">
+        <div class="mdl-layout__header-row">
+          <span class="mdl-layout-title"> Hello! </span>
+          <div class="mdl-layout-spacer"></div>  
+          <!--<div role="button" class="mdl-layout__drawer-button"> -->
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+                <i class="material-icons"> perm_identity</i>
+            </button>
+            <!-- </div> -->
+        </div>
+      </header>
+    
+      <main class="mdl-layout__content mdl-color--grey-100">
+        <div class="mdl-grid">
+          {% block body %}
+          {% endblock %}
+        </div>
+      </main>
+
+    </div>
+  </body>
+
+</html>

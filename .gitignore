@@ -1,0 +1,26 @@
+# Gitignore #
+
+# Python
+*.pyc
+
+# Database
+*.db
+
+# Secret/Confidential files
+secret
+
+# Editor files
+*.swp
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+*~
+.Spotlight-V100
+.Trashes
+.Trash-*
+.nfs*
+ehthumbs.db
+Thumbs.db
