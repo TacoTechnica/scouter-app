@@ -3,9 +3,11 @@
 import sys
 import os.path
 
-from flask import Flask, g, render_template, redirect
+from functools import wraps
+
+from flask import Flask, g, render_template, redirect, request
 from flask_login import login_required, current_user
-from flask.ext.bcrypt import Bcrypt
+from flask_bcrypt import Bcrypt
 
 from util.database import *
 
@@ -54,36 +56,73 @@ def route_scout():
 @app.route("/login", methods=["POST"])
 def route_login_post():
     # Login user.
-    validation = request.args
-    print validation
-    user = user_loader(validation["email"])
-    if user and bcrypt.check_password_hash(user.password, validation["password"]):
-        #user.authenticated = True
-        db.session.add(user)
-        db.session.commit()
-        login_user(user, remember=True)
-        # Login success
-        return True
-    # Login failed
-    return False
+    validation = request.form
+    email = user_loader(validation["email"])
+    # If no email or invalid password, return valid error
+    print "logging in"
+    if not email:
+        return "email,Email not found"
+    if not bcrypt.check_password_hash(user.password, validation["password"]):
+        return "password,Invalid password"
+    # Otherwise user login was successful
+    user.authenticated = True
+    db.session.add(email)
+    db.session.commit()
+    login_user(email, remember=True)
+    print "SUCCESS"
+    # Login success
+    return "1"
 
-# Login page
-@app.route("/login", methods=["GET"])
-def route_login_get():
-   return render_template("login.html") 
 
 @app.route("/logout")
 @login_required
 def route_logout():
+    user = current_user
+    user.authenticated = False
+    db.session.add(user)
+    db.session.commit()
     logout_user()
     return redirect("/home")
+
+# Registers user
+@app.route("/register", methods=["POST"])
+def route_register():
+    form = request.form
+    # If user already exists
+    if (user_loader(validation["email"])):
+        return "email,Email already exists"
+ 
+    # If none of the checks returned an error, we're good.
+    user = User(email=validation["email"], 
+                password=bcrypt.generate_password_hash(validation["password"]) )
+    db.session.add(user)
+    db.session.commit()
+    return "1"
+
+# Login page
+@app.route("/login", methods=["GET"])
+def route_login_page():
+   return render_template("login.html") 
+
+# Register page
+@app.route("/register", methods=["GET"])
+def route_register_page():
+    return render_template("register.html");
+
+# Context Processor, automatically passing data to EVERY template
+# Makes sure we don't have to manually pass data every time we render
+@app.context_processor
+def inject_data_for_all_templates():
+    return dict(
+            #user=current_user
+            )
 
 # Login wrapper. If no user exists, redirect to '/login' 
 def login_required(f):
     @wraps(f)
     def decorated_function(*args,**kwargs):
         if g.user is None:
-            return redirect('login')
+            return redirect('/login')
         return f(*args, **kwargs)
     return decorated_function
 

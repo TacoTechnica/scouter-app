@@ -1,6 +1,6 @@
 
 /* basic stylings ------------------------------------------ */
-.container      { 
+.container { 
   font-family:'Roboto';
   width:600px; 
   margin:30px auto 0; 
@@ -8,7 +8,7 @@
   background:#FFF;
   padding:10px 50px 50px;
 }
-h2       { 
+h2 { 
   text-align:center; 
   margin-bottom:50px; 
 }
@@ -17,8 +17,50 @@ h2 small {
   color:#888; 
   display:block; 
 }
-.footer     { text-align:center; }
-.footer a  { color:#53B2C8; }
+
+.group { 
+  position:relative; 
+  margin-bottom:45px; 
+}
+
+/* Div containers and whatnot ------------------------------ */
+
+.footer {
+    font-size: 0.65rem;
+    font-weight: italic;
+    text-color: #FFFFFF;
+    border: 2px ;
+    text-align: center;
+    background: #F1F1F1;
+    border-radius: 2px;
+    box-shadow 14px 0 0 rgba(0,0,0,0,0.2) 8px 0 0 rgba(0,0,0,0.18);
+    bottom: 0;
+    margin: auto;
+    position: absolute;
+    width: 100%;
+    padding: 1rem;
+}  
+
+.box {
+  background: #EEEEEE;
+  border-radius: 2px;
+  margin: 1rem;
+}
+
+.loginbox {
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+  margin: auto;
+  width: 60%;
+  padding: 5rem;
+}
+
+/* Alignment classes -------------------------------------- */
+.bring-to-front {
+  position: absolute;
+  overflow: inherit;
+  z-index: 999;
+}
+
 
 /*.logindiv {
   box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0

@@ -1,0 +1,126 @@
+<!-- Modular login box, used on a page or in a popup -->
+<center>
+  <div name="login_window">
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" id="user_group">
+      <input class="mdl-textfield__input" type="text" id="user_field">
+      <label class="mdl-textfield__label" for="user_field"> Email </label>
+      <span class="mdl-textfield__error" id="user_field_error"></span>
+    </div>
+    <br>
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" id="password_group">
+      <input class="mdl-textfield__input" type="password" id="password_field">
+      <label class="mdl-textfield__label" for="password_field"> Password </label>
+      <span class="mdl-textfield__error" id="password_field_error"></span>
+    </div>
+    <br>
+    <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" id="login_button"> Login </a>
+  </div>
+</center>
+
+<script type="text/javascript">
+    /*$("div[name='login_window']").each(function() {
+        var set_error = function(error_id, group_id, message) {
+            $(this).children("#" + error_id)[0].innerHTML = message;
+            $(this).children("#" + group_id)[0].className += " is-invalid";
+        }
+
+        var login = function(xmlhttp) {
+            // If successful, then redirect. Otherwise update message
+            response = xmlhttp.response;
+            console.log("RESPONSE: " + response);
+            if (response.valueOf() == "1") {
+                // Redirect to home
+                window.location.href="/home";
+            } else {
+                // Print error in relevant location
+                var res = response.split(",");
+                switch (res[0]) {
+                    case "email":
+                        set_error("user_field_error","user_group", res[1]);
+                        break;
+                    case "password":
+                    default: // Might want to make default do something else...
+                        set_error("user_field_error","user_group", res[1]);
+                        set_error("password_field_error","password_group", res[1]);
+               }
+            }
+        }
+
+        // Attempt login when pressing button:
+        $(this).children("#login_button").click(function() {
+            
+            var user_field = $(this).children("#user_group").children("#user_field")[0].val();
+            var password_field = $(this).children("#password_group").children("#password_field")[0].val();
+            
+            if (user_field === "") {
+                set_error("user_field_error","user_group", "Username required");
+                return;
+            }
+            if (password_field === "") {
+                set_error("password_field_error","password_group", "Password required");
+                return;
+            }
+            
+            $.ajax({
+                    type: "post",
+                    url: "/login",
+                    dataType: "json",
+                    data: {email: user_field , password: password_field},
+                    success: login,
+                    error: login
+            });
+        });
+    });*/
+
+    var set_error = function(error_id, group_id, message) {
+        $("#" + error_id)[0].innerHTML = message;
+        $("#" + group_id)[0].className += " is-invalid";
+    }
+
+    var login = function(xmlhttp) {
+        // If successful, then redirect. Otherwise update message
+        response = xmlhttp.response;
+        console.log("RESPONSE: " + response);
+        if (response.valueOf() == "1") {
+            // Redirect to home
+            window.location.href="/home";
+        } else {
+            // Print error in relevant location
+            var res = response.split(",");
+            switch (res[0]) {
+                case "email":
+                    set_error("user_field_error","user_group", res[1]);
+                    break;
+                case "password":
+                default: // Might want to make default do something else...
+                    set_error("user_field_error","user_group", res[1]);
+                    set_error("password_field_error","password_group", res[1]);
+           }
+        }
+    }
+
+    // Attempt login when pressing button:
+    $("#login_button").click(function() {
+        
+        var user_field = $("#user_field").val();
+        var password_field = $("#password_field").val();
+        
+        if (user_field === "") {
+            set_error("user_field_error","user_group", "Username required");
+            return;
+        }
+        if (password_field === "") {
+            set_error("password_field_error","password_group", "Password required");
+            return;
+        }
+        
+        $.ajax({
+                type: "post",
+                url: "/login",
+                dataType: "json",
+                data: {email: user_field , password: password_field},
+                success: login,
+                error: login
+        });
+    });
+</script>
