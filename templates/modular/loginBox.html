@@ -13,7 +13,9 @@
       <span class="mdl-textfield__error" id="password_field_error"></span>
     </div>
     <br>
-    <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" id="login_button"> Login </a>
+    <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" id="login_button"> Login </button>
+    <br><br> <i> No account? </i> <br>
+    <a href="/register" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised"> Register Here! </a>
   </div>
 </center>
 
@@ -80,8 +82,8 @@
     var login = function(xmlhttp) {
         // If successful, then redirect. Otherwise update message
         response = xmlhttp.response;
-        console.log("RESPONSE: " + response);
-        if (response.valueOf() == "1") {
+        
+        if (response.valueOf() == "success") {
             // Redirect to home
             window.location.href="/home";
         } else {
@@ -92,6 +94,8 @@
                     set_error("user_field_error","user_group", res[1]);
                     break;
                 case "password":
+                    set_error("password_field_error","password_group", res[1]);
+                    break;
                 default: // Might want to make default do something else...
                     set_error("user_field_error","user_group", res[1]);
                     set_error("password_field_error","password_group", res[1]);

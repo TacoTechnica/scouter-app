@@ -6,7 +6,7 @@ import os.path
 from functools import wraps
 
 from flask import Flask, g, render_template, redirect, request
-from flask_login import login_required, current_user
+from flask_login import login_required, current_user, login_user, logout_user
 from flask_bcrypt import Bcrypt
 
 from util.database import *
@@ -33,12 +33,18 @@ db.init_app(app)
 # Setup login manage
 login_manager.init_app(app)
 
+##### Other constants
+
+RESPONSE_SUCCESS = "success"
+
+
 # Run before first request: We cannot create all inline
 #          (unless we do db = SQLAlchemy(app) )
 @app.before_first_request
 def initialize_database():
+    print "Initialized"
     db.create_all()
-
+    
 @app.route("/")
 def route_default():
     return redirect("/home")
@@ -55,23 +61,25 @@ def route_scout():
 # Checks for login
 @app.route("/login", methods=["POST"])
 def route_login_post():
+    print "Users"
+    print User.query.all()
     # Login user.
     validation = request.form
-    email = user_loader(validation["email"])
+    user = load_user(validation["email"])
     # If no email or invalid password, return valid error
     print "logging in"
-    if not email:
+    if not user:
         return "email,Email not found"
     if not bcrypt.check_password_hash(user.password, validation["password"]):
         return "password,Invalid password"
     # Otherwise user login was successful
     user.authenticated = True
-    db.session.add(email)
+    db.session.add(user)
     db.session.commit()
-    login_user(email, remember=True)
+    login_user(user, remember=True)
     print "SUCCESS"
     # Login success
-    return "1"
+    return RESPONSE_SUCCESS
 
 
 @app.route("/logout")
@@ -88,16 +96,33 @@ def route_logout():
 @app.route("/register", methods=["POST"])
 def route_register():
     form = request.form
-    # If user already exists
-    if (user_loader(validation["email"])):
+    if ( form["email"] == "" ):
+        return "email,Email required"
+    if ( load_user( form["email"] ) ):
         return "email,Email already exists"
- 
+    if ( form["email"].find("@") == -1 or form["email"].find(".com") == -1):
+        return "email,Not a valid email"
+    if ( form["password"] == "" ):
+        return "password,Password is required"
+    if ( form["name"] == "" ):
+        return "name,Name is required"
+    if ( form["team"] == "" ):
+        return "team,Team is required"
+    if ( int(form["team"]) <= 0 ):
+        return "team,Invalid team number"
+
     # If none of the checks returned an error, we're good.
-    user = User(email=validation["email"], 
-                password=bcrypt.generate_password_hash(validation["password"]) )
+    print "ok1"
+    user = User(email=form["email"], 
+                password=bcrypt.generate_password_hash(form["password"]),
+                name=form["name"],
+                teamNumber=int(form["team"])
+                )
+    print "ok4"
     db.session.add(user)
     db.session.commit()
-    return "1"
+    print "ok5 we done"
+    return RESPONSE_SUCCESS
 
 # Login page
 @app.route("/login", methods=["GET"])
@@ -129,13 +154,16 @@ def login_required(f):
 # Gets and sets the secret key from a file
 def set_secret_key(fname):
     try:
-        app.config["SECRET_KEY"] = open(fname, "rb").read()
+        app.config["SECRET_KEY"] = unicode(open(fname, "rb").read())
     except IOError:
         print "Error: No secret key. Create it with:"
         if not os.path.isdir(os.path.dirname(fname)):
             print "mkdir", os.path.dirname(fname)
         print 'head -c 24 /dev/urandom >', fname
         print "And fill it in with the secret key"
+        print "If flask user_login is giving you issues with this, \
+               just generate your own random key by mashing the keyboard \
+               until you have 32 random characters"
         sys.exit(1)
 
 if __name__ == "__main__":
@@ -143,7 +171,7 @@ if __name__ == "__main__":
         host = "127.0.0.1"
     else:
         host = "0.0.0.0"
-    
+ 
     set_secret_key("secret/secretkey")
 
     app.run(host = host,

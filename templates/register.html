@@ -1,10 +1,10 @@
-{% extends base.html %}
+{% extends "base_blank.html" %}
 
 {% block head %}
   <title> Register </title>
 {% endblock %}
 
-{% block content %}
+{% block body %}
   <center>
     <h2> Create a new account </h2>
     
@@ -20,13 +20,75 @@
       <label class="mdl-textfield__label" for="password_field"> Password </label>
       <span class="mdl-textfield__error" id="password_field_error"></span>
     </div>
+    <br>
 
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" id="name_group">
       <input class="mdl-textfield__input" type="text" id="name_field">
       <label class="mdl-textfield__label" for="name_field"> Name </label>
       <span class="mdl-textfield__error" id="name_field_error"></span>
     </div>
+    <br>
+
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" id="team_group">
+      <input class="mdl-textfield__input" type="text" id="team_field">
+      <label class="mdl-textfield__label" for="team_field"> Team Number </label>
+      <span class="mdl-textfield__error" id="team_field_error"></span>
+    </div>
 
 
     <br>
-    <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" id="login_button"> Login </a>
+    <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" id="register_button"> Register </a>
+  </center>
+    <script>
+
+    var set_error = function(error_id, group_id, message) {
+        $("#" + error_id)[0].innerHTML = message;
+        $("#" + group_id)[0].className += " is-invalid";
+    }
+
+    var register = function(xmlhttp) {
+        // If successful, then redirect. Otherwise update message
+        response = xmlhttp.response;
+        console.log("response: " + response);
+        if (response.valueOf() == "success") {
+            // Redirect to login
+            window.location.href="/login";
+        } else {
+            // Print error in relevant location
+            var res = response.split(",");
+            switch (res[0]) {
+                case "email":
+                    set_error("user_field_error","user_group", res[1]);
+                    break;
+                case "password":
+                    set_error("password_field_error","password_group", res[1]);
+                    break;
+                case "name":
+                    set_error("name_field_error","name_group",res[1]);
+                    break;
+                case "team":
+                    set_error("team_field_error","team_group",res[1]);
+                    break;
+            }
+        }
+    }
+    // Attempt register on button click
+    $("#register_button").click(function() {
+        
+        var user_field = $("#user_field").val();
+        var password_field = $("#password_field").val();
+        var name_field = $("#name_field").val();
+        var team_field = $("#team_field").val();
+        
+        $.ajax({
+                type: "post",
+                url: "/register",
+                dataType: "json",
+                data: {email: user_field , name: name_field, team: team_field, password: password_field},
+                success: register,
+                error: register
+        });
+    });
+</script>
+
+{% endblock %}

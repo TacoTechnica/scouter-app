@@ -29,11 +29,12 @@
           <span class="mdl-layout-title"> {% block title %} {% endblock %} </span>
           <!-- Spacer to align navigation to right -->
           <div class="mdl-layout-spacer"></div>
-          <!-- User button if logged in, otherwise a big Login button-->
+          <!-- Logout if logged in, otherwise a big Login button-->
           {% if current_user.is_authenticated() %}
-            <button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored">
-              <i class="material-icons"> perm identity </i>
-            </button>
+            <!--<button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored">
+              <i class="material-icons md-light"> perm_identity </i>
+            </button>-->
+            <a href="/logout" class="mdl-button"> Logout </a>
           {% else %}
             <button class="mdl-button mdl-js-button mdl-js-ripple-effect" id="login_dialog_button">
               Login
@@ -46,8 +47,8 @@
             </dialog>
             {% endif %}
         </div> 
-
       </header>
+      
       <div class="mdl-layout__drawer">
         <span class="mdl-layout-title"> Navigation </span>
         <nav class="mdl-navigation">
@@ -60,7 +61,7 @@
 
     <main class="mdl-layout__content">
       <div class="page-content"> 
-        {% block body %}
+        {% block content %}
         {% endblock %}
       </div>
   

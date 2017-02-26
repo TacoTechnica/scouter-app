@@ -19,8 +19,18 @@ h2 small {
 }
 
 .group { 
-  position:relative; 
+  position:relative;
   margin-bottom:45px; 
+}
+
+/* colors and other visuals ------------------------------- */
+
+.material-icons.md-light {
+  color: rgba(255,255,255,1);
+}
+
+.material-icons.md-dark {
+  color: rgba(10,10,10,0.9);
 }
 
 /* Div containers and whatnot ------------------------------ */
